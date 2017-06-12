@@ -1,0 +1,135 @@
+<!--
+@license
+Copyright 2016 The Advanced REST client authors <arc@mulesoft.com>
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License.
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<!--
+`<content-type-selector>` is an element that provides an UI for selecting common content type values.
+
+The element do not show a value that is not defined in the list. Instead it shows the label.
+
+The element also fires the `content-type-changed` custom event when the user change the value
+in the drop down container.
+
+### Example
+```
+<content-type-selector></content-type-selector>
+```
+
+The list of content type values can be extended by setting child `<paper-item>` elements with the
+`data-type` attribute set to content type value.
+
+### Example
+```
+<content-type-selector>
+  <paper-item data-type="application/zip">Zip file</paper-item>
+  <paper-item data-type="application/7z">7-zip file</paper-item>
+</content-type-selector>
+```
+
+### Styling
+`<content-type-selector>` provides the following custom properties and mixins for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--content-type-selector` | Mixin applied to the element | `{}`
+
+The element support styles for `paper-dropdown-menu`, `paper-listbox` and `paper-item`
+
+@group UI Elements
+@element content-type-selector
+@demo demo/index.html
+-->
+<dom-module id="content-type-selector">
+  <template>
+    <style>
+    :host {
+      display: block;
+      @apply(--content-type-selector);
+    }
+    </style>
+    <paper-dropdown-menu label="Body content type">
+      <paper-listbox class="dropdown-content" on-iron-select="_contentTypeSelected" selected="[[contentType]]" attr-for-selected="data-type">
+        <paper-item data-type="application/json">application/json</paper-item>
+        <paper-item data-type="application/xml">application/xml</paper-item>
+        <paper-item data-type="application/atom+xml">application/atom+xml</paper-item>
+        <paper-item data-type="multipart/form-data">multipart/form-data</paper-item>
+        <paper-item data-type="multipart/alternative">multipart/alternative</paper-item>
+        <paper-item data-type="multipart/mixed">multipart/mixed</paper-item>
+        <paper-item data-type="application/x-www-form-urlencoded">application/x-www-form-urlencoded</paper-item>
+        <paper-item data-type="application/base64">application/base64</paper-item>
+        <paper-item data-type="application/octet-stream">application/octet-stream</paper-item>
+        <paper-item data-type="text/plain">text/plain</paper-item>
+        <paper-item data-type="text/css">text/css</paper-item>
+        <paper-item data-type="text/html">text/html</paper-item>
+        <paper-item data-type="application/javascript">application/javascript</paper-item>
+        <content select="paper-item[data-type]"></content>
+      </paper-listbox>
+    </paper-dropdown-menu>
+  </template>
+  <script>
+  Polymer({
+    is: 'content-type-selector',
+    /**
+     * Fired when the content type header has been updated.
+     *
+     * @event content-type-changed
+     * @param {String} value New Content type.
+     */
+    properties: {
+      /**
+       * A value of a Content-Type header.
+       *
+       * @type {Stirng}
+       */
+      contentType: String
+    },
+
+    attached: function() {
+      this.listen(window, 'content-type-changed', '_contentTypeHandler');
+    },
+
+    detached: function() {
+      this.unlisten(window, 'content-type-changed', '_contentTypeHandler');
+    },
+
+    /**
+     * If the event comes from different source then this element then it will
+     * update `content-type` value.
+     */
+    _contentTypeHandler: function(e) {
+      var event = Polymer.dom(e);
+      if (event.rootTarget === this) {
+        return;
+      }
+      var ct = e.detail.value;
+      if (ct !== this.contentType) {
+        this.set('contentType', ct);
+      }
+    },
+
+    /**
+     * When chanding the editor it mey require to also change the content type header.
+     * This function updates Content-Type.
+     */
+    _contentTypeSelected: function(e) {
+      var ct = e.detail.item.dataset.type;
+      this.fire('content-type-changed', {
+        value: ct
+      });
+    },
+  });
+  </script>
+</dom-module>

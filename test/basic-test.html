@@ -1,0 +1,89 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../iron-test-helpers/test-helpers.js"></script>
+    <script src="../../iron-test-helpers/mock-interactions.js"></script>
+
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../content-type-selector.html">
+  </head>
+  <body>
+
+    <test-fixture id="basic">
+      <template>
+        <content-type-selector></content-type-selector>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="extended">
+      <template>
+        <content-type-selector>
+          <paper-item data-type="application/zip">Zip file</paper-item>
+        </content-type-selector>
+      </template>
+    </test-fixture>
+
+    <script>
+    /* global suite, test, fixture, assert, sinon */
+    suite('basic', function() {
+      var element;
+      const CT_VALUE = 'application/json';
+
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('Fires content type change event', function() {
+        var spy = sinon.stub();
+        var dropdown = element.$$('paper-listbox');
+
+        element.addEventListener('content-type-changed', spy);
+        dropdown.selected = CT_VALUE;
+        assert.isTrue(spy.calledOnce);
+      });
+
+      test('Handles content-type-changed event', function() {
+        var init = {
+          detail: {
+            value: CT_VALUE
+          },
+          bubbles: true,
+          cancelable: true
+        };
+        var event = new CustomEvent('content-type-changed', init);
+        document.dispatchEvent(event);
+        assert.equal(element.contentType, CT_VALUE);
+      });
+    });
+
+    suite('extended', function() {
+      var element;
+      const CT_VALUE = 'application/zip';
+
+      setup(function() {
+        element = fixture('extended');
+      });
+
+      test('Renders extended option', function() {
+        var item = element.queryAllEffectiveChildren('paper-item[data-type="' + CT_VALUE + '"]');
+        assert.ok(item);
+      });
+    });
+    </script>
+
+  </body>
+</html>
