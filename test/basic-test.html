@@ -46,11 +46,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       test('Fires content type change event', function() {
+
+        var dropdown = element.$$('paper-listbox');
         var spy = sinon.stub();
         element.addEventListener('content-type-changed', spy);
-        var dropdown = element.$$('paper-listbox');
         dropdown.selected = 1;
-        assert.isTrue(spy.calledOnce);
+        assert.isTrue(spy.called);
       });
 
       test('Handles content-type-changed event', function() {
@@ -70,6 +71,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         element.contentType = 'multipart/form-data; boundary=something';
         assert.isDefined(element.selected);
       });
+
+      test('Selection changes content type value', function() {
+        element.selected = 1;
+        assert.equal(element.contentType, 'application/xml');
+      });
     });
 
     suite('extended', function() {
@@ -83,6 +89,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('Renders extended option', function() {
         var item = element.queryAllEffectiveChildren('paper-item[data-type="' + CT_VALUE + '"]');
         assert.ok(item);
+      });
+
+      test('Selectes extended option', function() {
+        element.contentType = CT_VALUE;
+        assert.isDefined(element.selected);
       });
     });
     </script>

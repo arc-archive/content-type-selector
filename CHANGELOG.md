@@ -1,3 +1,17 @@
+<a name="0.1.4"></a>
+## [0.1.4](https://github.com/advanced-rest-client/content-type-selector/compare/0.1.3...0.1.4) (2017-07-18)
+
+
+### Docs
+
+* Updated docs for events. ([5df119bc9fdfd23dcc47918cc0197f7acba95648](https://github.com/advanced-rest-client/content-type-selector/commit/5df119bc9fdfd23dcc47918cc0197f7acba95648))
+
+### Fix
+
+* Fixed CT change notification. ([c8265cb0e237a437595426e4fa4c5fb0d02f5949](https://github.com/advanced-rest-client/content-type-selector/commit/c8265cb0e237a437595426e4fa4c5fb0d02f5949))
+
+
+
 <a name="0.1.3"></a>
 ## [0.1.3](https://github.com/advanced-rest-client/content-type-selector/compare/0.1.2...0.1.3) (2017-07-18)
 

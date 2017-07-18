@@ -35,20 +35,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <div class="vertical-section-container centered">
     <h3>Default values</h3>
     <demo-snippet>
-      <template>
-        <content-type-selector></content-type-selector>
+      <template is="dom-bind">
+        <content-type-selector content-type="{{ct}}"></content-type-selector>
+        <code>Selected content-type: [[ct]]</code>
       </template>
     </demo-snippet>
 
     <h3>Extended values</h3>
     <demo-snippet>
-      <template>
-        <content-type-selector content-type="application/zip">
+      <template is="dom-bind" id="preSelected">
+        <content-type-selector content-type="{{ct}}">
           <paper-item data-type="application/zip">Zip file</paper-item>
           <paper-item data-type="application/7z">7-zip file</paper-item>
         </content-type-selector>
+        <code>Selected content-type: [[ct]]</code>
+      </template>
+    </demo-snippet>
+
+    <h3>Listens for content type change event on scoped element</h3>
+    <demo-snippet>
+      <template is="dom-bind">
+        <div id="scopedTarget">
+          <content-type-selector id="scoped" content-type="{{ct}}"></content-type-selector>
+          <code>Selected content-type: [[ct]]</code>
+        </div>
+        <script>
+        document.getElementById('scoped').eventsTarget = document.getElementById('scopedTarget');
+        </script>
       </template>
     </demo-snippet>
   </div>
+  <script>
+  document.getElementById('preSelected').ct = 'application/zip';
+  </script>
 </body>
 </html>

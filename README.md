@@ -39,6 +39,10 @@ global `window` object. This can be controlled by setting the `eventsTarget`
 property to an element that will be used as an event listeners target.
 This way the application can scope events accepted by this element.
 
+This will not work for events dispatched on this element. The scoped element
+should handle `content-type-changed` custom event and stop it's propagation
+if appropriate.
+
 Once the `content-type-changed` custom event it changes value of current
 content type on this element unless the event has been canceled.
 
