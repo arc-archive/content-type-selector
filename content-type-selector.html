@@ -12,24 +12,32 @@ License for the specific language governing permissions and limitations under
 the License.
 -->
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../events-target-behavior/events-target-behavior.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <!--
-`<content-type-selector>` is an element that provides an UI for selecting common content type values.
+`<content-type-selector>` is an element that provides an UI for selecting common
+content type values.
 
-The element do not show a value that is not defined in the list. Instead it shows the label.
+The element do not renders a value that is not defined on the list.
+Instead it shows the default label.
 
-The element also fires the `content-type-changed` custom event when the user change the value
-in the drop down container.
+If the content type is more complex, mening has additional information like
+`multipart/form-data; boundary=something` then, in this case` only the
+`multipart/form-data` is taken into the account when computing selected item.
+
+The element fires the `content-type-changed` custom event when the user change
+the value in the drop down container. It is not fired when the change has not
+beem cause by the user.
 
 ### Example
 ```
 <content-type-selector></content-type-selector>
 ```
 
-The list of content type values can be extended by setting child `<paper-item>` elements with the
-`data-type` attribute set to content type value.
+The list of content type values can be extended by setting child `<paper-item>`
+elements with the `data-type` attribute set to content type value.
 
 ### Example
 ```
@@ -39,12 +47,23 @@ The list of content type values can be extended by setting child `<paper-item>` 
 </content-type-selector>
 ```
 
+### Listening for content type change event
+
+By default the element listens for the `content-type-changed` custom event on
+global `window` object. This can be controlled by setting the `eventsTarget`
+property to an element that will be used as an event listeners target.
+This way the application can scope events accepted by this element.
+
+Once the `content-type-changed` custom event it changes value of current
+content type on this element unless the event has been canceled.
+
 ### Styling
 `<content-type-selector>` provides the following custom properties and mixins for styling:
 
 Custom property | Description | Default
 ----------------|-------------|----------
 `--content-type-selector` | Mixin applied to the element | `{}`
+`--content-type-selector-item` | Mixin applied to dropdown items | `{}`
 
 The element support styles for `paper-dropdown-menu`, `paper-listbox` and `paper-item`
 
@@ -57,11 +76,15 @@ The element support styles for `paper-dropdown-menu`, `paper-listbox` and `paper
     <style>
     :host {
       display: block;
-      @apply(--content-type-selector);
+      @apply --content-type-selector;
+    }
+
+    paper-item {
+      @apply --content-type-selector-item;
     }
     </style>
     <paper-dropdown-menu label="Body content type">
-      <paper-listbox class="dropdown-content" on-iron-select="_contentTypeSelected" selected="[[contentType]]" attr-for-selected="data-type">
+      <paper-listbox class="dropdown-content" on-iron-select="_contentTypeSelected" selected="[[selected]]" selectable="[data-type]">
         <paper-item data-type="application/json">application/json</paper-item>
         <paper-item data-type="application/xml">application/xml</paper-item>
         <paper-item data-type="application/atom+xml">application/atom+xml</paper-item>
@@ -82,6 +105,7 @@ The element support styles for `paper-dropdown-menu`, `paper-listbox` and `paper
   <script>
   Polymer({
     is: 'content-type-selector',
+    behaviors: [ArcBehaviors.EventsTargetBehavior],
     /**
      * Fired when the content type header has been updated.
      *
@@ -91,18 +115,46 @@ The element support styles for `paper-dropdown-menu`, `paper-listbox` and `paper
     properties: {
       /**
        * A value of a Content-Type header.
-       *
-       * @type {Stirng}
        */
-      contentType: String
+      contentType: String,
+      /**
+       * Index of currently selected item.
+       */
+      selected: Number
     },
 
-    attached: function() {
-      this.listen(window, 'content-type-changed', '_contentTypeHandler');
+    _attachListeners: function(node) {
+      this.listen(node, 'content-type-changed', '_contentTypeHandler');
     },
 
-    detached: function() {
-      this.unlisten(window, 'content-type-changed', '_contentTypeHandler');
+    _detachListeners: function(node) {
+      this.unlisten(node, 'content-type-changed', '_contentTypeHandler');
+    },
+
+    observers: ['_contentTypeChanged(contentType)'],
+
+    _contentTypeChanged: function(contentType) {
+      this.__cancelSelectedEvents = true;
+      if (!contentType) {
+        this.set('selected', undefined);
+        this.__cancelSelectedEvents = false;
+        return;
+      }
+      var index = contentType.indexOf(';');
+      if (index > 0) {
+        contentType = contentType.substr(0, index);
+      }
+      contentType = contentType.toLowerCase();
+      var supported = this.__getDropdownChildrenTypes();
+      for (var i = 0, len = supported.length; i < len; i++) {
+        if (supported[i].toLowerCase() === contentType) {
+          this.set('selected', i);
+          this.__cancelSelectedEvents = false;
+          return;
+        }
+      }
+      this.set('selected', undefined);
+      this.__cancelSelectedEvents = false;
     },
 
     /**
@@ -110,6 +162,9 @@ The element support styles for `paper-dropdown-menu`, `paper-listbox` and `paper
      * update `content-type` value.
      */
     _contentTypeHandler: function(e) {
+      if (e.defaultPrevented) {
+        return;
+      }
       var event = Polymer.dom(e);
       if (event.rootTarget === this) {
         return;
@@ -125,11 +180,43 @@ The element support styles for `paper-dropdown-menu`, `paper-listbox` and `paper
      * This function updates Content-Type.
      */
     _contentTypeSelected: function(e) {
+      if (this.__cancelSelectedEvents) {
+        return;
+      }
+      var event = Polymer.dom(e);
+      var selected = event.rootTarget.selected;
+      if (this.selected !== selected) {
+        this.set('selected', selected);
+      }
       var ct = e.detail.item.dataset.type;
       this.fire('content-type-changed', {
         value: ct
+      }, {
+        cancelable: true,
+        composed: true
       });
     },
+    /**
+     * Creates a list of all content types added to this element.
+     * This includes pre-existing onces and any added to loght DOM.
+     *
+     * @return {Array} Array of ordered content types (values of the
+     * `data-type` attribute).
+     */
+    __getDropdownChildrenTypes: function() {
+      var children = Polymer.dom(this.root)
+        .querySelectorAll('.dropdown-content paper-item');
+      children = children.concat(this.getContentChildren('content'));
+      return children.map(function(item) {
+        if (!item.dataset || !item.dataset.type) {
+          return;
+        }
+        return item.dataset.type;
+      })
+      .filter(function(item) {
+        return !!item;
+      });
+    }
   });
   </script>
 </dom-module>
