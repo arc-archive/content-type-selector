@@ -116,7 +116,10 @@ The element support styles for `paper-dropdown-menu`, `paper-listbox` and `paper
       /**
        * A value of a Content-Type header.
        */
-      contentType: String,
+      contentType: {
+        type: String,
+        notify: true
+      },
       /**
        * Index of currently selected item.
        */
@@ -195,6 +198,9 @@ The element support styles for `paper-dropdown-menu`, `paper-listbox` and `paper
         cancelable: true,
         composed: true
       });
+      if (this.contentType !== ct) {
+        this.set('contentType', ct);
+      }
     },
     /**
      * Creates a list of all content types added to this element.
