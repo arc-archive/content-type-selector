@@ -1,7 +1,7 @@
 {
   "name": "content-type-selector",
   "description": "A content type dropdown to select request CT header",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "license": "Apache-2.0 OR CC-BY-4.0",
   "authors": [
     "The Advanced REST client authors <arc@mulesoft.com>"
