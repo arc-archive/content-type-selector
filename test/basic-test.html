@@ -17,8 +17,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="../../web-component-tester/browser.js"></script>
     <script src="../../iron-test-helpers/test-helpers.js"></script>
     <script src="../../iron-test-helpers/mock-interactions.js"></script>
-
-    <!-- Step 1: import the element to test -->
     <link rel="import" href="../content-type-selector.html">
   </head>
   <body>
@@ -38,10 +36,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </test-fixture>
 
     <script>
-    /* global suite, test, fixture, assert, sinon */
+    /* global fixture, assert, sinon */
     suite('basic', function() {
       var element;
-      const CT_VALUE = 'application/json';
+      var CT_VALUE = 'application/json';
 
       setup(function() {
         element = fixture('basic');
@@ -49,10 +47,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       test('Fires content type change event', function() {
         var spy = sinon.stub();
-        var dropdown = element.$$('paper-listbox');
-
         element.addEventListener('content-type-changed', spy);
-        dropdown.selected = CT_VALUE;
+        var dropdown = element.$$('paper-listbox');
+        dropdown.selected = 1;
         assert.isTrue(spy.calledOnce);
       });
 
@@ -68,11 +65,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         document.dispatchEvent(event);
         assert.equal(element.contentType, CT_VALUE);
       });
+
+      test('Selected complex content types', function() {
+        element.contentType = 'multipart/form-data; boundary=something';
+        assert.isDefined(element.selected);
+      });
     });
 
     suite('extended', function() {
       var element;
-      const CT_VALUE = 'application/zip';
+      var CT_VALUE = 'application/zip';
 
       setup(function() {
         element = fixture('extended');
