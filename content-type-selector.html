@@ -159,7 +159,7 @@ The element support styles for `paper-dropdown-menu`, `paper-listbox` and `paper
       contentType = contentType.toLowerCase();
       const supported = this.__getDropdownChildrenTypes();
       const selected = supported.findIndex((item) => item.toLowerCase() === contentType);
-      if (selected === -1) {
+      if (selected !== -1) {
         this.set('selected', selected);
       } else {
         this.set('selected', undefined);
