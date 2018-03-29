@@ -172,7 +172,7 @@ the License.
      * @param {CustomEvent} e
      */
     _contentTypeHandler(e) {
-      if (e.defaultPrevented || e.target === this) {
+      if (e.defaultPrevented || e.composedPath()[0] === this) {
         return;
       }
       const ct = e.detail.value;
