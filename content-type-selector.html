@@ -193,16 +193,18 @@ the License.
         this.set('selected', selected);
       }
       const ct = e.detail.item.dataset.type;
-      this.dispatchEvent(new CustomEvent('content-type-changed', {
-        bubbles: true,
-        composed: true,
-        cancelable: false,
-        detail: {
-          value: ct
-        }
-      }));
       if (this.contentType !== ct) {
+        this.__cancelSelectedEvents = true;
+        this.dispatchEvent(new CustomEvent('content-type-changed', {
+          bubbles: true,
+          composed: true,
+          cancelable: false,
+          detail: {
+            value: ct
+          }
+        }));
         this.set('contentType', ct);
+        this.__cancelSelectedEvents = false;
       }
     }
     /**
