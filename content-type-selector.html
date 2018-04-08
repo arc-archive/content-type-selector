@@ -27,6 +27,11 @@ the License.
     paper-item {
       @apply --content-type-selector-item;
     }
+
+    paper-item:hover {
+      @apply --paper-item-hover;
+      @apply --content-type-selector-item-hover;
+    }
     </style>
     <paper-dropdown-menu label="Body content type">
       <paper-listbox slot="dropdown-content" on-iron-select="_contentTypeSelected" selected="[[selected]]" selectable="[data-type]">
