@@ -1,26 +1,22 @@
 {
-  "name": "content-type-selector",
-  "version": "1.0.0",
-  "license": "Apache-2.0 OR CC-BY-4.0",
+  "name": "@api-components/content-type-selector",
+  "version": "2.0.0-preview",
+  "license": "Apache-2.0",
   "description": "A content type dropdown to select request CT header",
   "devDependencies": {
-    "polymer-cli": "^1.2.0"
-  },
-  "engines": {
-    "node": ">=0.10.0"
+    "@polymer/gen-typescript-declarations": "^1.1.1"
   },
   "private": false,
-  "main": [
-    "content-type-selector.html"
+  "main": "content-type-selector.html",
+  "authors": [
+    "Pawel Psztyc",
+    "The Advanced REST client authors <arc@mulesoft.com>"
   ],
-  "author": "The Advanced REST client authors <arc@mulesoft.com>",
   "scripts": {
-    "serve": "node_modules/.bin/polymer serve",
-    "lint": "node_modules/.bin/polymer lint content-type-selector.html",
-    "test-sauce": "node_modules/.bin/polymer test --plugin sauce --job-name \"content-type-selector:local-test\"",
-    "test": "node_modules/.bin/polymer test --plugin local",
-    "deps": "npm install --quiet && bower install --quiet",
-    "update-deps": "npm update --quiet && bower update --quiet"
+    "lint": "polymer lint content-type-selector.html",
+    "test-sauce": "polymer test --plugin sauce --job-name \"content-type-selector:local-test\"",
+    "test": "polymer test --plugin local",
+    "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
   },
   "repository": {
     "type": "git",
