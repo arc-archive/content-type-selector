@@ -1,3 +1,18 @@
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/advanced-rest-client/content-type-selector/compare/0.1.4...2.0.0) (2018-05-18)
+
+
+### Docs
+
+* Added event documentation ([594daaf897f1d207556ee1d1abeb292dd32e4a45](https://github.com/advanced-rest-client/content-type-selector/commit/594daaf897f1d207556ee1d1abeb292dd32e4a45))
+* Updated documentation ([c110dafa27694781ee38c84ef2ef55fc3e6a2d9b](https://github.com/advanced-rest-client/content-type-selector/commit/c110dafa27694781ee38c84ef2ef55fc3e6a2d9b))
+
+### Update
+
+* Added the right way of checking event source ([b8785fbdb453097d08160510429016adbeef4150](https://github.com/advanced-rest-client/content-type-selector/commit/b8785fbdb453097d08160510429016adbeef4150))
+
+
+
 <a name="0.1.5"></a>
 ## [0.1.5](https://github.com/advanced-rest-client/content-type-selector/compare/0.1.4...0.1.5) (2017-07-18)
 
