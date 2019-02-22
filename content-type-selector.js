@@ -11,13 +11,12 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 */
-import { PolymerElement } from '../../@polymer/polymer/polymer-element.js';
-
-import { EventsTargetBehavior } from '../../events-target-behavior/events-target-behavior.js';
-import '../../@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
-import '../../@polymer/paper-listbox/paper-listbox.js';
-import '../../@polymer/paper-item/paper-item.js';
-import { html } from '../../@polymer/polymer/lib/utils/html-tag.js';
+import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
+import '@polymer/paper-listbox/paper-listbox.js';
+import '@polymer/paper-item/paper-item.js';
 /**
  * `<content-type-selector>` is an element that provides an UI for selecting common
  * content type values.
@@ -75,9 +74,9 @@ import { html } from '../../@polymer/polymer/lib/utils/html-tag.js';
  *
  * @demo demo/index.html
  * @memberof UiElements
- * @appliesMixin ArcBehaviors.EventsTargetBehavior
+ * @appliesMixin EventsTargetMixin
  */
-class ContentTypeSelector extends EventsTargetBehavior(PolymerElement) {
+class ContentTypeSelector extends EventsTargetMixin(PolymerElement) {
   static get template() {
     return html`
     <style>
@@ -96,7 +95,8 @@ class ContentTypeSelector extends EventsTargetBehavior(PolymerElement) {
     }
     </style>
     <paper-dropdown-menu label="Body content type">
-      <paper-listbox slot="dropdown-content" on-iron-select="_contentTypeSelected" selected="[[selected]]" selectable="[data-type]">
+      <paper-listbox slot="dropdown-content" on-iron-select="_contentTypeSelected"
+        selected="[[selected]]" selectable="[data-type]">
         <paper-item data-type="application/json">application/json</paper-item>
         <paper-item data-type="application/xml">application/xml</paper-item>
         <paper-item data-type="application/atom+xml">application/atom+xml</paper-item>
@@ -191,6 +191,8 @@ class ContentTypeSelector extends EventsTargetBehavior(PolymerElement) {
   /**
    * When chanding the editor it mey require to also change the content type header.
    * This function updates Content-Type.
+   *
+   * @param {CustomEvent} e
    */
   _contentTypeSelected(e) {
     if (this.__cancelSelectedEvents) {
