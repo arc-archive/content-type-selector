@@ -13,9 +13,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <script src="../../web-component-tester/browser.js"></script>
-    <link rel="import" href="../content-type-selector.html">
+    <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+    <script src="../../../wct-browser-legacy/browser.js"></script>
+    <script type="module" src="../content-type-selector.js"></script>
   </head>
   <body>
 
@@ -33,64 +33,65 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </test-fixture>
 
-    <script>
-    /* global fixture, assert, sinon */
-    suite('basic', () => {
-      let element;
-      const CT_VALUE = 'application/json';
+    <script type="module">
+import '../content-type-selector.js';
+/* global fixture, assert, sinon */
+suite('basic', () => {
+  let element;
+  const CT_VALUE = 'application/json';
 
-      setup((done) => {
-        element = fixture('basic');
-        flush(() => done());
-      });
+  setup((done) => {
+    element = fixture('basic');
+    flush(() => done());
+  });
 
-      test('Fires content type change event', () => {
-        const dropdown = element.shadowRoot.querySelector('paper-listbox');
-        const spy = sinon.stub();
-        element.addEventListener('content-type-changed', spy);
-        dropdown.selected = 1;
-        assert.isTrue(spy.called);
-      });
+  test('Fires content type change event', () => {
+    const dropdown = element.shadowRoot.querySelector('paper-listbox');
+    const spy = sinon.stub();
+    element.addEventListener('content-type-changed', spy);
+    dropdown.selected = 1;
+    assert.isTrue(spy.called);
+  });
 
-      test('Handles content-type-changed event', () => {
-        const init = {
-          detail: {
-            value: CT_VALUE
-          },
-          bubbles: true,
-          cancelable: true
-        };
-        const e = new CustomEvent('content-type-changed', init);
-        document.dispatchEvent(e);
-        assert.equal(element.contentType, CT_VALUE);
-      });
+  test('Handles content-type-changed event', () => {
+    const init = {
+      detail: {
+        value: CT_VALUE
+      },
+      bubbles: true,
+      cancelable: true
+    };
+    const e = new CustomEvent('content-type-changed', init);
+    document.dispatchEvent(e);
+    assert.equal(element.contentType, CT_VALUE);
+  });
 
-      test('Selected complex content types', () => {
-        element.contentType = 'multipart/form-data; boundary=something';
-        assert.isDefined(element.selected);
-      });
+  test('Selected complex content types', () => {
+    element.contentType = 'multipart/form-data; boundary=something';
+    assert.isDefined(element.selected);
+  });
 
-      test('Selection changes content type value', () => {
-        element.selected = 1;
-        assert.equal(element.contentType, 'application/xml');
-      });
-    });
+  test('Selection changes content type value', () => {
+    element.selected = 1;
+    assert.equal(element.contentType, 'application/xml');
+  });
+});
 
-    suite('extended', () => {
-      let element;
-      const CT_VALUE = 'application/zip';
+suite('extended', () => {
+  let element;
+  const CT_VALUE = 'application/zip';
 
-      setup((done) => {
-        element = fixture('extended');
-        flush(() => done());
-      });
+  setup((done) => {
+    element = fixture('extended');
+    flush(() => done());
+  });
 
-      test('Selectes extended option', () => {
-        element.contentType = CT_VALUE;
-        assert.equal(element.selected, 13);
-      });
-    });
-    </script>
+  test('Selectes extended option', () => {
+    element.contentType = CT_VALUE;
+    assert.equal(element.selected, 13);
+  });
+});
+</script>
 
   </body>
 </html>

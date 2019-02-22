@@ -14,19 +14,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
   <title>content-type-selector demo</title>
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
-  <link rel="import" href="../../web-animations-js/web-animations-next-lite.min.html">
-  <link rel="import" href="../content-type-selector.html">
-  <custom-style>
+  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+  <script type="module" src="../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
+  <script type="module" src="../../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
+  <script type="module" src="../../../@polymer/polymer/lib/elements/dom-bind.js"></script>
+  <script type="module" src="../../../web-animations-js/web-animations-next-lite.min.js"></script>
+  <script type="module" src="../content-type-selector.js"></script>
+  <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
     </style>
-  </custom-style>
+  </custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
 </head>
 <body>
-  <div class="vertical-section-container centered">
+  <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
     <h3>Default values</h3>
     <demo-snippet>
       <template>
@@ -65,14 +82,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
             <script>
             document.getElementById('scoped').eventsTarget = document.getElementById('scopedTarget');
-            </script>
+            &lt;/script>
+          </template>
+        </dom-bind>
+      </template>
+    </demo-snippet>
+  </div>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>mport '../../../web-animations-js/web-animations-next-lite.min.js';
+import '../content-type-selector.js';
+document.getElementById('scoped').eventsTarget = document.getElementById('scopedTarget');
+</script>
           </template>
         </dom-bind>
       </template>
     </demo-snippet>
   </div>
-  <script>
-  document.getElementById('preSelected').ct = 'application/zip';
-  </script>
+  <script type="module">
+import '../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+import '../../../@polymer/iron-demo-helpers/demo-snippet.js';
+import '../../../@polymer/polymer/lib/elements/dom-bind.js';
+import '../../../web-animations-js/web-animations-next-lite.min.js';
+import '../content-type-selector.js';
+document.getElementById('preSelected').ct = 'application/zip';
+</script>
 </body>
 </html>

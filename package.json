@@ -1,13 +1,32 @@
 {
-  "name": "@api-components/content-type-selector",
-  "version": "2.0.1",
-  "license": "Apache-2.0",
   "description": "A content type dropdown to select request CT header",
-  "devDependencies": {
-    "@polymer/gen-typescript-declarations": "^1.6.0"
+  "keywords": [
+    "web-components",
+    "polymer",
+    "http-request",
+    "content-type",
+    "selector"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/advanced-rest-client/content-type-selector.git"
   },
-  "private": false,
-  "main": "content-type-selector.html",
+  "name": "@api-components/content-type-selector",
+  "version": "3.0.0-preview.1",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@polymer/gen-typescript-declarations": "^1.6.0",
+    "@polymer/iron-demo-helpers": "^3.0.0",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "@polymer/iron-component-page": "^4.0.0",
+    "web-animations-js": "^2.3.1",
+    "@polymer/test-fixture": "^4.0.2",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "sinon": "^7.2.3",
+    "wct-mocha": "^1.0.0"
+  },
+  "main": "content-type-selector.js",
   "authors": [
     "Pawel Psztyc",
     "The Advanced REST client authors <arc@mulesoft.com>"
@@ -18,12 +37,18 @@
     "test": "polymer test --plugin local",
     "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/advanced-rest-client/content-type-selector.git"
-  },
   "bugs": {
     "url": "https://github.com/advanced-rest-client/content-type-selector/issues",
     "email": "arc@mulesoft.com"
+  },
+  "contributors": [
+    "Pawel Psztyc",
+    "The Advanced REST client authors <arc@mulesoft.com>"
+  ],
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0",
+    "@polymer/paper-dropdown-menu": "^3.0.0",
+    "@polymer/paper-listbox": "^3.0.0",
+    "@polymer/paper-item": "^3.0.0"
   }
 }
