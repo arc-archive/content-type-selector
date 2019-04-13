@@ -116,7 +116,6 @@ class ContentTypeSelector extends EventsTargetMixin(PolymerElement) {
 `;
   }
 
-  static get is() {return 'content-type-selector';}
   static get properties() {
     return {
       /**
@@ -246,4 +245,4 @@ class ContentTypeSelector extends EventsTargetMixin(PolymerElement) {
    * @param {String} value New value of the content type.
    */
 }
-window.customElements.define(ContentTypeSelector.is, ContentTypeSelector);
+window.customElements.define('content-type-selector', ContentTypeSelector);
