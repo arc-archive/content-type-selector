@@ -1,23 +1,23 @@
 {
-  "name": "@api-components/content-type-selector",
-  "version": "2.0.1",
-  "license": "Apache-2.0",
+  "name": "@advanced-rest-client/content-type-selector",
   "description": "A content type dropdown to select request CT header",
-  "devDependencies": {
-    "@polymer/gen-typescript-declarations": "^1.6.0"
-  },
-  "private": false,
-  "main": "content-type-selector.html",
+  "version": "3.0.0",
+  "license": "Apache-2.0",
+  "main": "content-type-selector.js",
+  "keywords": [
+    "web-components",
+    "http-request",
+    "content-type",
+    "selector"
+  ],
   "authors": [
     "Pawel Psztyc",
     "The Advanced REST client authors <arc@mulesoft.com>"
   ],
-  "scripts": {
-    "lint": "polymer lint content-type-selector.html",
-    "test-sauce": "polymer test --plugin sauce --job-name \"content-type-selector:local-test\"",
-    "test": "polymer test --plugin local",
-    "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
-  },
+  "contributors": [
+    "Pawel Psztyc",
+    "The Advanced REST client authors <arc@mulesoft.com>"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/advanced-rest-client/content-type-selector.git"
@@ -25,5 +25,55 @@
   "bugs": {
     "url": "https://github.com/advanced-rest-client/content-type-selector/issues",
     "email": "arc@mulesoft.com"
+  },
+  "dependencies": {
+    "@advanced-rest-client/events-target-mixin": "^3.0.0",
+    "@polymer/paper-dropdown-menu": "^3.0.0",
+    "@polymer/paper-item": "^3.0.0",
+    "@polymer/paper-listbox": "^3.0.0",
+    "@polymer/polymer": "^3.2.0",
+    "lit-element": "^2.0.1"
+  },
+  "devDependencies": {
+    "@advanced-rest-client/arc-demo-helper": "^1.0.3",
+    "@advanced-rest-client/eslint-config": "^1.0.6",
+    "@advanced-rest-client/prettier-config": "^0.1.0",
+    "@advanced-rest-client/testing-karma-sl": "^1.0.2",
+    "@commitlint/cli": "^8.1.0",
+    "@commitlint/config-conventional": "^7.0.0",
+    "@open-wc/testing": "^2.1.2",
+    "@open-wc/testing-karma": "^3.1.2",
+    "@polymer/gen-typescript-declarations": "^1.6.2",
+    "@polymer/paper-toggle-button": "^3.0.1",
+    "deepmerge": "^4.0.0",
+    "es-dev-server": "^1.5.0",
+    "husky": "^1.0.0",
+    "karma": "^4.2.0",
+    "lint-staged": "^8.0.0",
+    "sinon": "^7.3.2",
+    "web-animations-js": "^2.3.1"
+  },
+  "scripts": {
+    "test": "karma start --coverage",
+    "update-types": "gen-typescript-declarations --deleteExisting --outDir .",
+    "start": "es-dev-server --app-index demo/index.html --node-resolve --open --watch",
+    "start:compatibility": "es-dev-server --app-index demo/index.html --compatibility all --node-resolve --open --watch",
+    "lint:eslint": "eslint --ext .js,.html .",
+    "format:eslint": "eslint --ext .js,.html . --fix",
+    "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "format:prettier": "prettier \"**/*.js\" --write",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "format": "npm run format:eslint && npm run format:prettier",
+    "test:watch": "karma start --auto-watch=true --single-run=false",
+    "test:legacy": "karma start --legacy --coverage",
+    "test:legacy:watch": "karma start --legacy --auto-watch=true --single-run=false",
+    "test:sl": "karma start karma.sl.config.js --legacy --coverage"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
   }
 }
