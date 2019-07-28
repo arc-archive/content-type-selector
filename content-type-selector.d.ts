@@ -12,6 +12,10 @@
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
+import {LitElement, html, css} from 'lit-element';
+
+import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+
 declare namespace UiElements {
 
   /**
@@ -77,13 +81,16 @@ declare namespace UiElements {
      * A value of a Content-Type header.
      */
     contentType: string|null|undefined;
+    oncontenttypechanged: any;
 
     /**
      * Index of currently selected item.
      */
     selected: number|null|undefined;
+    render(): any;
     _attachListeners(node: any): void;
     _detachListeners(node: any): void;
+    firstUpdated(): void;
 
     /**
      * Handles change of content type value
@@ -103,6 +110,7 @@ declare namespace UiElements {
      * This function updates Content-Type.
      */
     _contentTypeSelected(e: CustomEvent|null): void;
+    _handleDropdownOpened(e: any): void;
   }
 }
 
@@ -112,5 +120,3 @@ declare global {
     "content-type-selector": UiElements.ContentTypeSelector;
   }
 }
-
-export {};

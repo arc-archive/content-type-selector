@@ -6,71 +6,93 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
   <title>content-type-selector demo</title>
 
-  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-  <script src="../../../web-animations-js/web-animations-next.min.js"></script>
+  <script src="../node_modules/web-animations-js/web-animations-next.min.js"></script>
 
-  <script type="module">
-    import '../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-    import '../../../@polymer/polymer/lib/elements/dom-bind.js';
-    import '../../../@polymer/iron-demo-helpers/demo-snippet.js';
-    import '../content-type-selector.js';
-  </script>
+  <style>
+    html,
+    body {
+      background-color: #EEEEEE;
+      min-height: 100%;
+    }
 
-  <custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-    </style>
-  </custom-style>
+    .demo {
+      max-width: 1200px;
+      width: 700px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background-color: #fff;
+      padding: 12px;
+      margin: 20px;
+      box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 8px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 3px -2px rgba(0, 0, 0, 0.4);
+    }
+
+
+    body.styled {
+      --primary-color: #00A2DF;
+    }
+
+    body.styled.dark {
+      background-color: #424242;
+      height: 100vh;
+      color: #fff;
+      --secondary-action-button-color: #fff;
+      --primary-color: #2196f3;
+      --primary-text-color: #fff;
+      --paper-toggle-button-label-color: #fff;
+    }
+
+    body.styled.dark .card {
+      background-color: #424242;
+    }
+  </style>
 </head>
-<body>
+
+<body class="styled">
   <div class="vertical-section-container centered">
     <h3>Default values</h3>
-    <demo-snippet>
+    <arc-demo-helper>
       <template>
-        <dom-bind>
-          <template is="dom-bind">
-            <content-type-selector content-type="{{ct}}"></content-type-selector>
-            <code>Selected content-type: [[ct]]</code>
-          </template>
-        </dom-bind>
+        <content-type-selector></content-type-selector>
+        <code>Selected content-type: <span></span></code>
       </template>
-    </demo-snippet>
+    </arc-demo-helper>
 
     <h3>Extended values</h3>
-    <demo-snippet>
+    <arc-demo-helper>
       <template>
-        <dom-bind id="preSelected">
-          <template is="dom-bind">
-            <content-type-selector content-type="{{ct}}">
-              <paper-item slot="item" data-type="application/zip">Zip file</paper-item>
-              <paper-item slot="item" data-type="application/7z">7-zip file</paper-item>
-            </content-type-selector>
-            <code>Selected content-type: [[ct]]</code>
-          </template>
-        </dom-bind>
+        <content-type-selector contenttype="application/zip">
+          <paper-item slot="item" data-type="application/zip">Zip file</paper-item>
+          <paper-item slot="item" data-type="application/7z">7-zip file</paper-item>
+        </content-type-selector>
+        <code>Selected content-type: <span></span></code>
       </template>
-    </demo-snippet>
+    </arc-demo-helper>
 
     <h3>Listens for content type change event on scoped element</h3>
-    <demo-snippet>
+    <arc-demo-helper>
       <template>
-        <dom-bind>
-          <template is="dom-bind">
-            <div id="scopedTarget">
-              <content-type-selector id="scoped" content-type="{{ct}}"></content-type-selector>
-              <code>Selected content-type: [[ct]]</code>
-            </div>
-            <script>
-            document.getElementById('scoped').eventsTarget = document.getElementById('scopedTarget');
-            </script>
-          </template>
-        </dom-bind>
+        <div id="scopedTarget">
+          <content-type-selector contenttype="application/json" id="scoped"></content-type-selector>
+          <code>Selected content-type: <span></span></code>
+        </div>
+        <script>
+        document.getElementById('scoped').eventsTarget = document.getElementById('scopedTarget');
+        </script>
       </template>
-    </demo-snippet>
+    </arc-demo-helper>
   </div>
-  <script>
-  window.addEventListener('WebComponentsReady', () => {
-    document.getElementById('preSelected').ct = 'application/zip';
-  });
-  </script>
+
+  <div class="centered actions card">
+    <h2>Options</h2>
+    <paper-toggle-button id="theme">Toggle dark theme</paper-toggle-button>
+    <paper-toggle-button id="narrow">Toggle narrow attribute</paper-toggle-button>
+    <paper-toggle-button checked id="styled">Toggle styles</paper-toggle-button>
+  </div>
+
+  <script type="module" src="./index.js"></script>
 </body>
 </html>

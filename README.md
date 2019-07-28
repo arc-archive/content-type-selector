@@ -8,18 +8,8 @@
 
 An element that provides an UI for selecting common content type values.
 
-<!---
-```
-<custom-element-demo>
-  <template>
-    <link rel="import" href="content-type-selector.html">
-    <next-code-block></next-code-block>
-  </template>
-</custom-element-demo>
-```
--->
 ```html
-<content-type-selector content-type="application/zip">
+<content-type-selector contenttype="application/zip">
   <paper-item slot="item" data-type="application/zip">Zip file</paper-item>
   <paper-item slot="item" data-type="application/7z">7-zip file</paper-item>
 </content-type-selector>
@@ -27,7 +17,7 @@ An element that provides an UI for selecting common content type values.
 
 ### API components
 
-This components is a part of API components ecosystem: https://elements.advancedrestclient.com/
+This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)
 
 ## Usage
 
@@ -47,9 +37,35 @@ npm install --save @advanced-rest-client/content-type-selector
     <script src="node_modules/web-animations-js/web-animations-next.min.js"></script>
   </head>
   <body>
-    <content-type-selector></content-type-selector>
+    <content-type-selector contenttype="application/json"></content-type-selector>
+    <script>
+    window.addEventListener('content-type-changed', (e) => {
+      console.log(e.detail.value);
+    });
+    </script>
   </body>
 </html>
+```
+
+### In a LitElement template
+
+```js
+import { LitElement, html } from 'lit-element';
+import '@advanced-rest-client/content-type-selector/content-type-selector.js';
+
+class SampleElement extends LitElement {
+  render() {
+    return html`
+    <content-type-selector .contentType="${this.mediaType}" @contenttype-changed="${this._mediaChangeHandler}"></content-type-selector>
+    `;
+  }
+
+  _mediaChangeHandler(e) {
+    console.log(e.target.contentType);
+    // or e.detail.value
+  }
+}
+customElements.define('sample-element', SampleElement);
 ```
 
 ### In a Polymer 3 element
@@ -61,7 +77,7 @@ import '@advanced-rest-client/content-type-selector/content-type-selector.js';
 class SampleElement extends PolymerElement {
   static get template() {
     return html`
-    <content-type-selector></content-type-selector>
+    <content-type-selector contenttype="{{mediaType}}"></content-type-selector>
     `;
   }
 }
@@ -72,19 +88,18 @@ customElements.define('sample-element', SampleElement);
 
 ```sh
 git clone https://github.com/advanced-rest-client/content-type-selector
-cd api-url-editor
+cd content-type-selector
 npm install
-npm install -g polymer-cli
 ```
 
 ### Running the demo locally
 
 ```sh
-polymer serve --npm
-open http://127.0.0.1:<port>/demo/
+npm start
 ```
 
 ### Running the tests
+
 ```sh
-polymer test --npm
+npm test
 ```

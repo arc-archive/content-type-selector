@@ -11,12 +11,11 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 */
-import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
-import {EventsTargetMixin} from '../../@advanced-rest-client/events-target-mixin/events-target-mixin.js';
-import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
-import '../../@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
-import '../../@polymer/paper-listbox/paper-listbox.js';
-import '../../@polymer/paper-item/paper-item.js';
+import { LitElement, html, css } from 'lit-element';
+import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
+import '@polymer/paper-listbox/paper-listbox.js';
+import '@polymer/paper-item/paper-item.js';
 /**
  * `<content-type-selector>` is an element that provides an UI for selecting common
  * content type values.
@@ -76,44 +75,46 @@ import '../../@polymer/paper-item/paper-item.js';
  * @memberof UiElements
  * @appliesMixin EventsTargetMixin
  */
-class ContentTypeSelector extends EventsTargetMixin(PolymerElement) {
-  static get template() {
+class ContentTypeSelector extends EventsTargetMixin(LitElement) {
+  static get styles() {
+    return css`
+      :host {
+        display: inline-block;
+      }
+    `;
+  }
+
+  render() {
     return html`
-    <style>
-    :host {
-      display: block;
-      @apply --content-type-selector;
-    }
-
-    paper-item {
-      @apply --content-type-selector-item;
-    }
-
-    paper-item:hover {
-      @apply --paper-item-hover;
-      @apply --content-type-selector-item-hover;
-    }
-    </style>
-    <paper-dropdown-menu label="Body content type">
-      <paper-listbox slot="dropdown-content" on-iron-select="_contentTypeSelected"
-        selected="[[selected]]" selectable="[data-type]">
-        <paper-item data-type="application/json">application/json</paper-item>
-        <paper-item data-type="application/xml">application/xml</paper-item>
-        <paper-item data-type="application/atom+xml">application/atom+xml</paper-item>
-        <paper-item data-type="multipart/form-data">multipart/form-data</paper-item>
-        <paper-item data-type="multipart/alternative">multipart/alternative</paper-item>
-        <paper-item data-type="multipart/mixed">multipart/mixed</paper-item>
-        <paper-item data-type="application/x-www-form-urlencoded">application/x-www-form-urlencoded</paper-item>
-        <paper-item data-type="application/base64">application/base64</paper-item>
-        <paper-item data-type="application/octet-stream">application/octet-stream</paper-item>
-        <paper-item data-type="text/plain">text/plain</paper-item>
-        <paper-item data-type="text/css">text/css</paper-item>
-        <paper-item data-type="text/html">text/html</paper-item>
-        <paper-item data-type="application/javascript">application/javascript</paper-item>
-        <slot name="item"></slot>
-      </paper-listbox>
-    </paper-dropdown-menu>
-`;
+      <paper-dropdown-menu
+        label="Body content type"
+        aria-label="Select request body content type"
+        aria-expanded="false"
+        @opened-changed="${this._handleDropdownOpened}"
+      >
+        <paper-listbox
+          slot="dropdown-content"
+          @iron-select="${this._contentTypeSelected}"
+          .selected="${this.selected}"
+          selectable="[data-type]"
+        >
+          <paper-item data-type="application/json">application/json</paper-item>
+          <paper-item data-type="application/xml">application/xml</paper-item>
+          <paper-item data-type="application/atom+xml">application/atom+xml</paper-item>
+          <paper-item data-type="multipart/form-data">multipart/form-data</paper-item>
+          <paper-item data-type="multipart/alternative">multipart/alternative</paper-item>
+          <paper-item data-type="multipart/mixed">multipart/mixed</paper-item>
+          <paper-item data-type="application/x-www-form-urlencoded">application/x-www-form-urlencoded</paper-item>
+          <paper-item data-type="application/base64">application/base64</paper-item>
+          <paper-item data-type="application/octet-stream">application/octet-stream</paper-item>
+          <paper-item data-type="text/plain">text/plain</paper-item>
+          <paper-item data-type="text/css">text/css</paper-item>
+          <paper-item data-type="text/html">text/html</paper-item>
+          <paper-item data-type="application/javascript">application/javascript</paper-item>
+          <slot name="item"></slot>
+        </paper-listbox>
+      </paper-dropdown-menu>
+    `;
   }
 
   static get properties() {
@@ -121,16 +122,49 @@ class ContentTypeSelector extends EventsTargetMixin(PolymerElement) {
       /**
        * A value of a Content-Type header.
        */
-      contentType: {
-        type: String,
-        notify: true,
-        observer: '_contentTypeChanged'
-      },
+      contentType: { type: String },
       /**
        * Index of currently selected item.
        */
-      selected: Number
+      selected: { type: Number }
     };
+  }
+
+  get contentType() {
+    return this._contentType;
+  }
+
+  set contentType(value) {
+    const old = this._contentType;
+    if (old === value) {
+      return;
+    }
+    // no need calling requestUpdate
+    this._contentType = value;
+    this.dispatchEvent(
+      new CustomEvent('contenttype-changed', {
+        detail: {
+          value
+        }
+      })
+    );
+    this._contentTypeChanged(value);
+  }
+
+  get oncontenttypechanged() {
+    return this._oncontenttypechanged;
+  }
+
+  set oncontenttypechanged(value) {
+    if (this._oncontenttypechanged) {
+      this.removeEventListener('contenttype-changed', this._oncontenttypechanged);
+    }
+    if (typeof value !== 'function') {
+      this._oncontenttypechanged = null;
+      return;
+    }
+    this._oncontenttypechanged = value;
+    this.addEventListener('contenttype-changed', this._oncontenttypechanged);
   }
 
   constructor() {
@@ -145,6 +179,10 @@ class ContentTypeSelector extends EventsTargetMixin(PolymerElement) {
   _detachListeners(node) {
     node.removeEventListener('content-type-changed', this._contentTypeHandler);
   }
+
+  firstUpdated() {
+    this._contentTypeChanged(this.contentType);
+  }
   /**
    * Handles change of content type value
    *
@@ -153,7 +191,7 @@ class ContentTypeSelector extends EventsTargetMixin(PolymerElement) {
   _contentTypeChanged(contentType) {
     this.__cancelSelectedEvents = true;
     if (!contentType) {
-      this.set('selected', undefined);
+      this.selected = undefined;
       this.__cancelSelectedEvents = false;
       return;
     }
@@ -165,9 +203,9 @@ class ContentTypeSelector extends EventsTargetMixin(PolymerElement) {
     const supported = this.__getDropdownChildrenTypes();
     const selected = supported.findIndex((item) => item.toLowerCase() === contentType);
     if (selected !== -1) {
-      this.set('selected', selected);
+      this.selected = selected;
     } else {
-      this.set('selected', undefined);
+      this.selected = undefined;
     }
     this.__cancelSelectedEvents = false;
   }
@@ -184,7 +222,7 @@ class ContentTypeSelector extends EventsTargetMixin(PolymerElement) {
     }
     const ct = e.detail.value;
     if (ct !== this.contentType) {
-      this.set('contentType', ct);
+      this.contentType = ct;
     }
   }
   /**
@@ -199,20 +237,22 @@ class ContentTypeSelector extends EventsTargetMixin(PolymerElement) {
     }
     const selected = e.target.selected;
     if (this.selected !== selected) {
-      this.set('selected', selected);
+      this.selected = selected;
     }
     const ct = e.detail.item.dataset.type;
     if (this.contentType !== ct) {
       this.__cancelSelectedEvents = true;
-      this.dispatchEvent(new CustomEvent('content-type-changed', {
-        bubbles: true,
-        composed: true,
-        cancelable: false,
-        detail: {
-          value: ct
-        }
-      }));
-      this.set('contentType', ct);
+      this.dispatchEvent(
+        new CustomEvent('content-type-changed', {
+          bubbles: true,
+          composed: true,
+          cancelable: false,
+          detail: {
+            value: ct
+          }
+        })
+      );
+      this.contentType = ct;
       this.__cancelSelectedEvents = false;
     }
   }
@@ -226,6 +266,9 @@ class ContentTypeSelector extends EventsTargetMixin(PolymerElement) {
   __getDropdownChildrenTypes() {
     let children = Array.from(this.shadowRoot.querySelectorAll('paper-listbox paper-item'));
     const slot = this.shadowRoot.querySelector('slot[name="item"]');
+    if (!slot) {
+      return [];
+    }
     const lightChildren = slot.assignedNodes();
     children = children.concat(lightChildren);
     const result = [];
@@ -238,6 +281,9 @@ class ContentTypeSelector extends EventsTargetMixin(PolymerElement) {
     return result;
   }
 
+  _handleDropdownOpened(e) {
+    e.target.setAttribute('aria-expanded', String(e.target.opened));
+  }
   /**
    * Dispatched when selected value changes
    *
