@@ -11,11 +11,11 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 */
-import { LitElement, html, css } from 'lit-element';
+import { html, css, LitElement } from 'lit-element';
 import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
-import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
-import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/paper-item/paper-item.js';
+import '@anypoint-web-components/anypoint-dropdown-menu/anypoint-dropdown-menu.js';
+import '@anypoint-web-components/anypoint-listbox/anypoint-listbox.js';
+import '@anypoint-web-components/anypoint-item/anypoint-item.js';
 /**
  * `<content-type-selector>` is an element that provides an UI for selecting common
  * content type values.
@@ -36,14 +36,14 @@ import '@polymer/paper-item/paper-item.js';
  * <content-type-selector></content-type-selector>
  * ```
  *
- * The list of content type values can be extended by setting child `<paper-item>`
+ * The list of content type values can be extended by setting child `<anypoint-item>`
  * elements with the `data-type` attribute set to content type value.
  *
  * ### Example
  * ```
  * <content-type-selector>
- *    <paper-item data-type="application/zip">Zip file</paper-item>
- *    <paper-item data-type="application/7z">7-zip file</paper-item>
+ *    <anypoint-item data-type="application/zip">Zip file</anypoint-item>
+ *    <anypoint-item data-type="application/7z">7-zip file</anypoint-item>
  * </content-type-selector>
  * ```
  *
@@ -62,14 +62,8 @@ import '@polymer/paper-item/paper-item.js';
  * content type on this element unless the event has been canceled.
  *
  * ### Styling
- * `<content-type-selector>` provides the following custom properties and mixins for styling:
  *
- * Custom property | Description | Default
- * ----------------|-------------|----------
- * `--content-type-selector` | Mixin applied to the element | `{}`
- * `--content-type-selector-item` | Mixin applied to dropdown items | `{}`
- *
- * The element support styles for `paper-dropdown-menu`, `paper-listbox` and `paper-item`
+ * The element support styles for `anypoint-dropdown-menu`, `anypoint-listbox` and `anypoint-item`
  *
  * @demo demo/index.html
  * @memberof UiElements
@@ -85,35 +79,46 @@ class ContentTypeSelector extends EventsTargetMixin(LitElement) {
   }
 
   render() {
+    const { readOnly, disabled, legacy, outlined, noLabelFloat } = this;
     return html`
-      <paper-dropdown-menu
-        label="Body content type"
+      <anypoint-dropdown-menu
+        ?noLabelFloat="${noLabelFloat}"
         aria-label="Select request body content type"
         aria-expanded="false"
+        .outlined="${outlined}"
+        .legacy="${legacy}"
+        .readOnly="${readOnly}"
+        .disabled="${disabled}"
         @opened-changed="${this._handleDropdownOpened}"
       >
-        <paper-listbox
+        <label slot="label">Body content type</label>
+        <anypoint-listbox
           slot="dropdown-content"
           @iron-select="${this._contentTypeSelected}"
           .selected="${this.selected}"
+          .disabled="${disabled}"
           selectable="[data-type]"
         >
-          <paper-item data-type="application/json">application/json</paper-item>
-          <paper-item data-type="application/xml">application/xml</paper-item>
-          <paper-item data-type="application/atom+xml">application/atom+xml</paper-item>
-          <paper-item data-type="multipart/form-data">multipart/form-data</paper-item>
-          <paper-item data-type="multipart/alternative">multipart/alternative</paper-item>
-          <paper-item data-type="multipart/mixed">multipart/mixed</paper-item>
-          <paper-item data-type="application/x-www-form-urlencoded">application/x-www-form-urlencoded</paper-item>
-          <paper-item data-type="application/base64">application/base64</paper-item>
-          <paper-item data-type="application/octet-stream">application/octet-stream</paper-item>
-          <paper-item data-type="text/plain">text/plain</paper-item>
-          <paper-item data-type="text/css">text/css</paper-item>
-          <paper-item data-type="text/html">text/html</paper-item>
-          <paper-item data-type="application/javascript">application/javascript</paper-item>
+          <anypoint-item .legacy="${legacy}" data-type="application/json">application/json</anypoint-item>
+          <anypoint-item .legacy="${legacy}" data-type="application/xml">application/xml</anypoint-item>
+          <anypoint-item .legacy="${legacy}" data-type="application/atom+xml">application/atom+xml</anypoint-item>
+          <anypoint-item .legacy="${legacy}" data-type="multipart/form-data">multipart/form-data</anypoint-item>
+          <anypoint-item .legacy="${legacy}" data-type="multipart/alternative">multipart/alternative</anypoint-item>
+          <anypoint-item .legacy="${legacy}" data-type="multipart/mixed">multipart/mixed</anypoint-item>
+          <anypoint-item .legacy="${legacy}" data-type="application/x-www-form-urlencoded"
+            >application/x-www-form-urlencoded</anypoint-item
+          >
+          <anypoint-item .legacy="${legacy}" data-type="application/base64">application/base64</anypoint-item>
+          <anypoint-item .legacy="${legacy}" data-type="application/octet-stream"
+            >application/octet-stream</anypoint-item
+          >
+          <anypoint-item .legacy="${legacy}" data-type="text/plain">text/plain</anypoint-item>
+          <anypoint-item .legacy="${legacy}" data-type="text/css">text/css</anypoint-item>
+          <anypoint-item .legacy="${legacy}" data-type="text/html">text/html</anypoint-item>
+          <anypoint-item .legacy="${legacy}" data-type="application/javascript">application/javascript</anypoint-item>
           <slot name="item"></slot>
-        </paper-listbox>
-      </paper-dropdown-menu>
+        </anypoint-listbox>
+      </anypoint-dropdown-menu>
     `;
   }
 
@@ -126,7 +131,27 @@ class ContentTypeSelector extends EventsTargetMixin(LitElement) {
       /**
        * Index of currently selected item.
        */
-      selected: { type: Number }
+      selected: { type: Number },
+      /**
+       * Passes the value to the dropdown element
+       */
+      noLabelFloat: { type: Boolean },
+      /**
+       * Enables Anypoint legacy styling
+       */
+      legacy: { type: Boolean },
+      /**
+       * Enables Material Design outlined style
+       */
+      outlined: { type: Boolean },
+      /**
+       * When set the editor is in read only mode.
+       */
+      readOnly: { type: Boolean },
+      /**
+       * When set all controls are disabled in the form
+       */
+      disabled: { type: Boolean }
     };
   }
 
@@ -264,7 +289,7 @@ class ContentTypeSelector extends EventsTargetMixin(LitElement) {
    * `data-type` attribute).
    */
   __getDropdownChildrenTypes() {
-    let children = Array.from(this.shadowRoot.querySelectorAll('paper-listbox paper-item'));
+    let children = Array.from(this.shadowRoot.querySelectorAll('anypoint-listbox anypoint-item'));
     const slot = this.shadowRoot.querySelector('slot[name="item"]');
     if (!slot) {
       return [];

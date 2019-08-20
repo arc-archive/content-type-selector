@@ -13,7 +13,7 @@ describe('<content-type-selector>', () => {
 
   async function extendedFixture() {
     return await fixture(`<content-type-selector>
-      <paper-item slot="item" data-type="application/zip">Zip file</paper-item>
+      <anypoint-item slot="item" data-type="application/zip">Zip file</anypoint-item>
     </content-type-selector>`);
   }
 
@@ -26,7 +26,7 @@ describe('<content-type-selector>', () => {
     });
 
     it('Fires content type change event', () => {
-      const dropdown = element.shadowRoot.querySelector('paper-listbox');
+      const dropdown = element.shadowRoot.querySelector('anypoint-listbox');
       const spy = sinon.stub();
       element.addEventListener('content-type-changed', spy);
       dropdown.selected = 1;
@@ -144,9 +144,7 @@ describe('<content-type-selector>', () => {
   describe('a11y', () => {
     it('passes accessibility test', async () => {
       const el = await selectedFixture();
-      await assert.isAccessible(el, {
-        ignoredRules: ['tabindex', 'button-name']
-      });
+      await assert.isAccessible(el);
     });
   });
 });
