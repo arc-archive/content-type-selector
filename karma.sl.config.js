@@ -11,9 +11,9 @@ module.exports = (config) => {
     'SL_Chrome-1',
     'SL_Firefox',
     'SL_Firefox-1',
-    'SL_Safari',
+    'SL_Safari'
     // 'SL_Safari-1',
-    'SL_EDGE'
+    // 'SL_EDGE'
   ];
   if (process.env.TRAVIS) {
     const buildLabel = 'TRAVIS #' + process.env.TRAVIS_BUILD_NUMBER + ' (' + process.env.TRAVIS_BUILD_ID + ')';
