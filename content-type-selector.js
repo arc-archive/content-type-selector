@@ -74,6 +74,17 @@ class ContentTypeSelector extends EventsTargetMixin(LitElement) {
     return css`
       :host {
         display: inline-block;
+        margin: 12px 8px;
+        height: 56px;
+      }
+
+      :host([legacy]),
+      :host([nolabelfloat]) {
+        height: 40px;
+      }
+
+      anypoint-dropdown-menu {
+        margin: 0;
       }
     `;
   }
@@ -135,11 +146,11 @@ class ContentTypeSelector extends EventsTargetMixin(LitElement) {
       /**
        * Passes the value to the dropdown element
        */
-      noLabelFloat: { type: Boolean },
+      noLabelFloat: { type: Boolean, reflect: true },
       /**
        * Enables Anypoint legacy styling
        */
-      legacy: { type: Boolean },
+      legacy: { type: Boolean, reflect: true },
       /**
        * Enables Material Design outlined style
        */
