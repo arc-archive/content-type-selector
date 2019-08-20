@@ -1,7 +1,7 @@
 {
   "name": "@advanced-rest-client/content-type-selector",
   "description": "A content type dropdown to select request CT header",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "license": "Apache-2.0",
   "main": "content-type-selector.js",
   "keywords": [
