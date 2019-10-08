@@ -78,7 +78,7 @@ export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
         height: 56px;
       }
 
-      :host([legacy]),
+      :host([compatibility]),
       :host([nolabelfloat]) {
         height: 40px;
       }
@@ -90,16 +90,16 @@ export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
   }
 
   render() {
-    const { readOnly, disabled, legacy, outlined, noLabelFloat } = this;
+    const { readOnly, disabled, compatibility, outlined, noLabelFloat } = this;
     return html`
       <anypoint-dropdown-menu
         ?noLabelFloat="${noLabelFloat}"
         aria-label="Select request body content type"
         aria-expanded="false"
-        .outlined="${outlined}"
-        .legacy="${legacy}"
-        .readOnly="${readOnly}"
-        .disabled="${disabled}"
+        ?outlined="${outlined}"
+        ?compatibility="${compatibility}"
+        ?readOnly="${readOnly}"
+        ?disabled="${disabled}"
         @opened-changed="${this._handleDropdownOpened}"
       >
         <label slot="label">Body content type</label>
@@ -107,26 +107,27 @@ export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
           slot="dropdown-content"
           @iron-select="${this._contentTypeSelected}"
           .selected="${this.selected}"
-          .disabled="${disabled}"
+          ?disabled="${disabled}"
+          ?compatibility="${compatibility}"
           selectable="[data-type]"
         >
-          <anypoint-item .legacy="${legacy}" data-type="application/json">application/json</anypoint-item>
-          <anypoint-item .legacy="${legacy}" data-type="application/xml">application/xml</anypoint-item>
-          <anypoint-item .legacy="${legacy}" data-type="application/atom+xml">application/atom+xml</anypoint-item>
-          <anypoint-item .legacy="${legacy}" data-type="multipart/form-data">multipart/form-data</anypoint-item>
-          <anypoint-item .legacy="${legacy}" data-type="multipart/alternative">multipart/alternative</anypoint-item>
-          <anypoint-item .legacy="${legacy}" data-type="multipart/mixed">multipart/mixed</anypoint-item>
-          <anypoint-item .legacy="${legacy}" data-type="application/x-www-form-urlencoded"
+          <anypoint-item ?compatibility="${compatibility}" data-type="application/json">application/json</anypoint-item>
+          <anypoint-item ?compatibility="${compatibility}" data-type="application/xml">application/xml</anypoint-item>
+          <anypoint-item ?compatibility="${compatibility}" data-type="application/atom+xml">application/atom+xml</anypoint-item>
+          <anypoint-item ?compatibility="${compatibility}" data-type="multipart/form-data">multipart/form-data</anypoint-item>
+          <anypoint-item ?compatibility="${compatibility}" data-type="multipart/alternative">multipart/alternative</anypoint-item>
+          <anypoint-item ?compatibility="${compatibility}" data-type="multipart/mixed">multipart/mixed</anypoint-item>
+          <anypoint-item ?compatibility="${compatibility}" data-type="application/x-www-form-urlencoded"
             >application/x-www-form-urlencoded</anypoint-item
           >
-          <anypoint-item .legacy="${legacy}" data-type="application/base64">application/base64</anypoint-item>
-          <anypoint-item .legacy="${legacy}" data-type="application/octet-stream"
+          <anypoint-item ?compatibility="${compatibility}" data-type="application/base64">application/base64</anypoint-item>
+          <anypoint-item ?compatibility="${compatibility}" data-type="application/octet-stream"
             >application/octet-stream</anypoint-item
           >
-          <anypoint-item .legacy="${legacy}" data-type="text/plain">text/plain</anypoint-item>
-          <anypoint-item .legacy="${legacy}" data-type="text/css">text/css</anypoint-item>
-          <anypoint-item .legacy="${legacy}" data-type="text/html">text/html</anypoint-item>
-          <anypoint-item .legacy="${legacy}" data-type="application/javascript">application/javascript</anypoint-item>
+          <anypoint-item ?compatibility="${compatibility}" data-type="text/plain">text/plain</anypoint-item>
+          <anypoint-item ?compatibility="${compatibility}" data-type="text/css">text/css</anypoint-item>
+          <anypoint-item ?compatibility="${compatibility}" data-type="text/html">text/html</anypoint-item>
+          <anypoint-item ?compatibility="${compatibility}" data-type="application/javascript">application/javascript</anypoint-item>
           <slot name="item"></slot>
         </anypoint-listbox>
       </anypoint-dropdown-menu>
@@ -148,9 +149,9 @@ export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
        */
       noLabelFloat: { type: Boolean, reflect: true },
       /**
-       * Enables Anypoint legacy styling
+       * Enables compatibility with Anypoint styling
        */
-      legacy: { type: Boolean, reflect: true },
+      compatibility: { type: Boolean, reflect: true },
       /**
        * Enables Material Design outlined style
        */
