@@ -79,3 +79,7 @@
 
 
 
+## [3.1.2](https://github.com/advanced-rest-client/content-type-selector/compare/0.1.4...3.1.2) (2019-10-08)
+
+
+
