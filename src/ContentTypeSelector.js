@@ -70,7 +70,7 @@ import '@anypoint-web-components/anypoint-item/anypoint-item.js';
  * @appliesMixin EventsTargetMixin
  */
 export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
-  static get styles() {
+  get styles() {
     return css`
       :host {
         display: inline-block;
@@ -91,7 +91,7 @@ export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
 
   render() {
     const { readOnly, disabled, compatibility, outlined, noLabelFloat } = this;
-    return html`
+    return html`<style>${this.styles}</style>
       <anypoint-dropdown-menu
         ?noLabelFloat="${noLabelFloat}"
         aria-label="Select request body content type"
