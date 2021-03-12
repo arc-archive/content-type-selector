@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /**
 @license
 Copyright 2016 The Advanced REST client authors <arc@mulesoft.com>
@@ -11,11 +12,22 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 */
-import { html, css, LitElement } from 'lit-element';
-import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+import { html, LitElement } from 'lit-element';
+import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin';
 import '@anypoint-web-components/anypoint-dropdown-menu/anypoint-dropdown-menu.js';
 import '@anypoint-web-components/anypoint-listbox/anypoint-listbox.js';
 import '@anypoint-web-components/anypoint-item/anypoint-item.js';
+import elementStyles from './styles/Selector.js';
+
+/** @typedef {import('lit-element').TemplateResult} TemplateResult */
+/** @typedef {import('@anypoint-web-components/anypoint-listbox').AnypointListbox} AnypointListbox */
+
+export const SupportedTypes = [
+  'application/json', 'application/xml', 'application/atom+xml', 'multipart/form-data', 'multipart/alternative',
+  'multipart/mixed', 'application/x-www-form-urlencoded', 'application/base64', 'application/octet-stream', 'text/plain',
+  'text/css', 'text/html', 'application/javascript',
+];
+
 /**
  * `<content-type-selector>` is an element that provides an UI for selecting common
  * content type values.
@@ -23,13 +35,13 @@ import '@anypoint-web-components/anypoint-item/anypoint-item.js';
  * The element do not renders a value that is not defined on the list.
  * Instead it shows the default label.
  *
- * If the content type is more complex, mening has additional information like
+ * If the content type is more complex, meaning has additional information like
  * `multipart/form-data; boundary=something` then, in this case` only the
  * `multipart/form-data` is taken into the account when computing selected item.
  *
  * The element fires the `content-type-changed` custom event when the user change
  * the value in the drop down container. It is not fired when the change has not
- * beem cause by the user.
+ * been cause by the user.
  *
  * ### Example
  * ```
@@ -64,74 +76,10 @@ import '@anypoint-web-components/anypoint-item/anypoint-item.js';
  * ### Styling
  *
  * The element support styles for `anypoint-dropdown-menu`, `anypoint-listbox` and `anypoint-item`
- *
- * @demo demo/index.html
- * @memberof UiElements
- * @appliesMixin EventsTargetMixin
  */
 export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
   get styles() {
-    return css`
-      :host {
-        display: inline-block;
-        margin: 12px 8px;
-        height: 56px;
-      }
-
-      :host([compatibility]),
-      :host([nolabelfloat]) {
-        height: 40px;
-      }
-
-      anypoint-dropdown-menu {
-        margin: 0;
-      }
-    `;
-  }
-
-  render() {
-    const { readOnly, disabled, compatibility, outlined, noLabelFloat } = this;
-    return html`<style>${this.styles}</style>
-      <anypoint-dropdown-menu
-        ?noLabelFloat="${noLabelFloat}"
-        aria-label="Select request body content type"
-        aria-expanded="false"
-        ?outlined="${outlined}"
-        ?compatibility="${compatibility}"
-        ?readOnly="${readOnly}"
-        ?disabled="${disabled}"
-        @opened-changed="${this._handleDropdownOpened}"
-      >
-        <label slot="label">Body content type</label>
-        <anypoint-listbox
-          slot="dropdown-content"
-          @iron-select="${this._contentTypeSelected}"
-          .selected="${this.selected}"
-          ?disabled="${disabled}"
-          ?compatibility="${compatibility}"
-          selectable="[data-type]"
-        >
-          <anypoint-item ?compatibility="${compatibility}" data-type="application/json">application/json</anypoint-item>
-          <anypoint-item ?compatibility="${compatibility}" data-type="application/xml">application/xml</anypoint-item>
-          <anypoint-item ?compatibility="${compatibility}" data-type="application/atom+xml">application/atom+xml</anypoint-item>
-          <anypoint-item ?compatibility="${compatibility}" data-type="multipart/form-data">multipart/form-data</anypoint-item>
-          <anypoint-item ?compatibility="${compatibility}" data-type="multipart/alternative">multipart/alternative</anypoint-item>
-          <anypoint-item ?compatibility="${compatibility}" data-type="multipart/mixed">multipart/mixed</anypoint-item>
-          <anypoint-item ?compatibility="${compatibility}" data-type="application/x-www-form-urlencoded"
-            >application/x-www-form-urlencoded</anypoint-item
-          >
-          <anypoint-item ?compatibility="${compatibility}" data-type="application/base64">application/base64</anypoint-item>
-          <anypoint-item ?compatibility="${compatibility}" data-type="application/octet-stream"
-            >application/octet-stream</anypoint-item
-          >
-          <anypoint-item ?compatibility="${compatibility}" data-type="text/plain">text/plain</anypoint-item>
-          <anypoint-item ?compatibility="${compatibility}" data-type="text/css">text/css</anypoint-item>
-          <anypoint-item ?compatibility="${compatibility}" data-type="text/html">text/html</anypoint-item>
-          <anypoint-item ?compatibility="${compatibility}" data-type="application/javascript">application/javascript</anypoint-item>
-          <slot name="item"></slot>
-        </anypoint-listbox>
-      </anypoint-dropdown-menu>
-    `;
+    return elementStyles;
   }
 
   static get properties() {
@@ -206,6 +154,35 @@ export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
 
   constructor() {
     super();
+    /**
+     * @type {string}
+     */
+    this.contentType = undefined;
+    /**
+     * @type {number}
+     */
+    this.selected = undefined;
+    /**
+     * @type {boolean}
+     */
+    this.noLabelFloat = false;
+    /**
+     * @type {boolean}
+     */
+    this.compatibility = false;
+    /**
+     * @type {boolean}
+     */
+    this.outlined = false;
+    /**
+     * @type {boolean}
+     */
+    this.readOnly = false;
+    /**
+     * @type {boolean}
+     */
+    this.disabled = false;
+
     this._contentTypeHandler = this._contentTypeHandler.bind(this);
   }
 
@@ -217,9 +194,11 @@ export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
     node.removeEventListener('content-type-changed', this._contentTypeHandler);
   }
 
-  firstUpdated() {
+  firstUpdated(args) {
+    super.firstUpdated(args);
     this._contentTypeChanged(this.contentType);
   }
+
   /**
    * Handles change of content type value
    *
@@ -262,8 +241,9 @@ export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
       this.contentType = ct;
     }
   }
+
   /**
-   * When chanding the editor it mey require to also change the content type header.
+   * When changing the editor it mey require to also change the content type header.
    * This function updates Content-Type.
    *
    * @param {CustomEvent} e
@@ -272,11 +252,15 @@ export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
     if (this.__cancelSelectedEvents) {
       return;
     }
-    const selected = e.target.selected;
-    if (this.selected !== selected) {
-      this.selected = selected;
+    const list = /** @type AnypointListbox */ (e.target);
+    const { selected, selectedItem } = list;
+    if (!selectedItem) {
+      return;
     }
-    const ct = e.detail.item.dataset.type;
+    if (this.selected !== selected) {
+      this.selected = Number(selected);
+    }
+    const ct = selectedItem.dataset.type;
     if (this.contentType !== ct) {
       this.__cancelSelectedEvents = true;
       this.dispatchEvent(
@@ -293,27 +277,31 @@ export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
       this.__cancelSelectedEvents = false;
     }
   }
+
   /**
    * Creates a list of all content types added to this element.
-   * This includes pre-existing onces and any added to loght DOM.
+   * This includes pre-existing onces and any added to light DOM.
    *
-   * @return {Array} Array of ordered content types (values of the
-   * `data-type` attribute).
+   * @returns {string[]} Array of ordered content types (values of the `data-type` attribute).
    */
   __getDropdownChildrenTypes() {
     let children = Array.from(this.shadowRoot.querySelectorAll('anypoint-listbox anypoint-item'));
-    const slot = this.shadowRoot.querySelector('slot[name="item"]');
+    const slot = /** @type HTMLSlotElement */ (this.shadowRoot.querySelector('slot[name="item"]'));
     if (!slot) {
       return [];
     }
-    const lightChildren = slot.assignedNodes();
+    const lightChildren = slot.assignedElements();
     children = children.concat(lightChildren);
     const result = [];
     children.forEach((item) => {
-      if (!item.dataset || !item.dataset.type) {
+      if (item.nodeType !== Node.ELEMENT_NODE) {
         return;
       }
-      result[result.length] = item.dataset.type;
+      const elm = /** @type HTMLElement */ (item);
+      if (!elm.dataset.type) {
+        return;
+      }
+      result[result.length] = elm.dataset.type;
     });
     return result;
   }
@@ -321,10 +309,32 @@ export class ContentTypeSelector extends EventsTargetMixin(LitElement) {
   _handleDropdownOpened(e) {
     e.target.setAttribute('aria-expanded', String(e.target.opened));
   }
-  /**
-   * Dispatched when selected value changes
-   *
-   * @event content-type-changed
-   * @param {String} value New value of the content type.
-   */
+
+  render() {
+    const { readOnly, disabled, compatibility, outlined, noLabelFloat } = this;
+    return html`<style>${this.styles}</style>
+      <anypoint-dropdown-menu
+        ?noLabelFloat="${noLabelFloat}"
+        aria-label="Select request body content type"
+        aria-expanded="false"
+        ?outlined="${outlined}"
+        ?compatibility="${compatibility}"
+        ?disabled="${disabled || readOnly}"
+        @opened-changed="${this._handleDropdownOpened}"
+      >
+        <label slot="label">Body content type</label>
+        <anypoint-listbox
+          slot="dropdown-content"
+          @select="${this._contentTypeSelected}"
+          .selected="${this.selected}"
+          ?disabled="${disabled}"
+          ?compatibility="${compatibility}"
+          selectable="[data-type]"
+        >
+          ${SupportedTypes.map((v) => html`<anypoint-item ?compatibility="${compatibility}" data-type="${v}">${v}</anypoint-item>`)}
+          <slot name="item"></slot>
+        </anypoint-listbox>
+      </anypoint-dropdown-menu>
+    `;
+  }
 }

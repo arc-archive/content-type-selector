@@ -6,18 +6,15 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
   <title>content-type-selector demo</title>
 
-  <script src="../node_modules/web-animations-js/web-animations-next.min.js"></script>
-
   <style>
     body.styled {
-      --anypoiont-dropdown-shaddow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+      --anypoint-dropdown-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
     }
 
     body.styled.dark {
       --secondary-action-button-color: #fff;
       --primary-color: #2196f3;
       --primary-text-color: #fff;
-      --paper-toggle-button-label-color: #fff;
 
       --anypoint-dropdown-menu-background-color: #494949;
       --anypoint-dropdown-menu-label-background-color: var(--primary-background-color);
@@ -72,9 +69,9 @@
 
   <div class="centered actions card">
     <h2>Options</h2>
-    <paper-toggle-button id="theme">Toggle dark theme</paper-toggle-button>
-    <paper-toggle-button id="narrow">Toggle narrow attribute</paper-toggle-button>
-    <paper-toggle-button checked id="styled">Toggle styles</paper-toggle-button>
+    <anypoint-switch id="theme">Toggle dark theme</anypoint-switch>
+    <anypoint-switch id="narrow">Toggle narrow attribute</anypoint-switch>
+    <anypoint-switch checked id="styled">Toggle styles</anypoint-switch>
   </div>
 
   <script type="module" src="./index.js"></script>

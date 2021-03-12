@@ -1,10 +1,4 @@
-[![Published on NPM](https://img.shields.io/npm/v/@advanced-rest-client/content-type-selector.svg)](https://www.npmjs.com/package/@advanced-rest-client/content-type-selector)
-
-[![Build Status](https://travis-ci.org/advanced-rest-client/content-type-selector.svg?branch=stage)](https://travis-ci.org/advanced-rest-client/content-type-selector)
-
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/advanced-rest-client/content-type-selector)
-
-## &lt;content-type-selector&gt;
+# content-type-selector
 
 An element that provides an UI for selecting common content type values.
 
@@ -15,14 +9,15 @@ An element that provides an UI for selecting common content type values.
 </content-type-selector>
 ```
 
-### API components
+[![Published on NPM](https://img.shields.io/npm/v/@advanced-rest-client/content-type-selector.svg)](https://www.npmjs.com/package/@advanced-rest-client/content-type-selector)
 
-This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)
+[![Tests and publishing](https://github.com/advanced-rest-client/content-type-selector/actions/workflows/deployment.yml/badge.svg)](https://github.com/advanced-rest-client/content-type-selector/actions/workflows/deployment.yml)
 
 ## Usage
 
 ### Installation
-```
+
+```sh
 npm install --save @advanced-rest-client/content-type-selector
 ```
 
@@ -84,7 +79,7 @@ class SampleElement extends PolymerElement {
 customElements.define('sample-element', SampleElement);
 ```
 
-### Installation
+## Development
 
 ```sh
 git clone https://github.com/advanced-rest-client/content-type-selector

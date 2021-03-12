@@ -1,39 +1,50 @@
 import { fixture, assert, nextFrame } from '@open-wc/testing';
-import sinon from 'sinon/pkg/sinon-esm.js';
+import sinon from 'sinon';
 import '../content-type-selector.js';
 
-describe('<content-type-selector>', () => {
+/** @typedef {import('../index').ContentTypeSelector} ContentTypeSelector */
+
+describe('ContentTypeSelector', () => {
+  /**
+   * @returns {Promise<ContentTypeSelector>}
+   */
   async function basicFixture() {
-    return await fixture(`<content-type-selector></content-type-selector>`);
+    return fixture(`<content-type-selector></content-type-selector>`);
   }
 
+  /**
+   * @returns {Promise<ContentTypeSelector>}
+   */
   async function selectedFixture() {
-    return await fixture(`<content-type-selector selected="1"></content-type-selector>`);
+    return fixture(`<content-type-selector selected="1"></content-type-selector>`);
   }
 
+  /**
+   * @returns {Promise<ContentTypeSelector>}
+   */
   async function extendedFixture() {
-    return await fixture(`<content-type-selector>
+    return fixture(`<content-type-selector>
       <anypoint-item slot="item" data-type="application/zip">Zip file</anypoint-item>
     </content-type-selector>`);
   }
 
   describe('basic', () => {
-    let element;
+    let element = /** @type ContentTypeSelector */ (null);
     const CT_VALUE = 'application/json';
 
     beforeEach(async () => {
       element = await basicFixture();
     });
 
-    it('Fires content type change event', () => {
-      const dropdown = element.shadowRoot.querySelector('anypoint-listbox');
+    it('dispatches content type change event', () => {
       const spy = sinon.stub();
       element.addEventListener('content-type-changed', spy);
-      dropdown.selected = 1;
+      const item = /** @type HTMLElement */ (element.shadowRoot.querySelector('anypoint-listbox anypoint-item'));
+      item.click();
       assert.isTrue(spy.called);
     });
 
-    it('Handles content-type-changed event', () => {
+    it('handles content-type-changed event', () => {
       const init = {
         detail: {
           value: CT_VALUE
@@ -46,7 +57,7 @@ describe('<content-type-selector>', () => {
       assert.equal(element.contentType, CT_VALUE);
     });
 
-    it('Selected complex content types', () => {
+    it('selects complex content types', () => {
       element.contentType = 'multipart/form-data; boundary=something';
       assert.isDefined(element.selected);
     });
@@ -59,13 +70,13 @@ describe('<content-type-selector>', () => {
   });
 
   describe('_contentTypeChanged()', () => {
-    let element;
+    let element = /** @type ContentTypeSelector */ (null);
     beforeEach(async () => {
       element = await selectedFixture();
     });
 
     it('Resets selection when no argument', () => {
-      element._contentTypeChanged();
+      element._contentTypeChanged(undefined);
       assert.isUndefined(element.selected);
     });
 
@@ -86,21 +97,21 @@ describe('<content-type-selector>', () => {
   });
 
   describe('extended', () => {
-    let element;
+    let element = /** @type ContentTypeSelector */ (null);
     const CT_VALUE = 'application/zip';
 
     beforeEach(async () => {
       element = await extendedFixture();
     });
 
-    it('Selectes extended option', () => {
+    it('Selects extended option', () => {
       element.contentType = CT_VALUE;
       assert.equal(element.selected, 13);
     });
   });
 
   describe('oncontenttypechanged', () => {
-    let element;
+    let element = /** @type ContentTypeSelector */ (null);
     beforeEach(async () => {
       element = await basicFixture();
     });

@@ -1,0 +1,112 @@
+{
+  "version": "experimental",
+  "tags": [
+    {
+      "name": "content-type-selector",
+      "path": "./content-type-selector.js",
+      "description": "`<content-type-selector>` is an element that provides an UI for selecting common\ncontent type values.\n\nThe element do not renders a value that is not defined on the list.\nInstead it shows the default label.\n\nIf the content type is more complex, meaning has additional information like\n`multipart/form-data; boundary=something` then, in this case` only the\n`multipart/form-data` is taken into the account when computing selected item.\n\nThe element fires the `content-type-changed` custom event when the user change\nthe value in the drop down container. It is not fired when the change has not\nbeen cause by the user.\n\n### Example\n```\n<content-type-selector></content-type-selector>\n```\n\nThe list of content type values can be extended by setting child `<anypoint-item>`\nelements with the `data-type` attribute set to content type value.\n\n### Example\n```\n<content-type-selector>\n    <anypoint-item data-type=\"application/zip\">Zip file</anypoint-item>\n    <anypoint-item data-type=\"application/7z\">7-zip file</anypoint-item>\n</content-type-selector>\n```\n\n### Listening for content type change event\n\nBy default the element listens for the `content-type-changed` custom event on\nglobal `window` object. This can be controlled by setting the `eventsTarget`\nproperty to an element that will be used as an event listeners target.\nThis way the application can scope events accepted by this element.\n\nThis will not work for events dispatched on this element. The scoped element\nshould handle `content-type-changed` custom event and stop it's propagation\nif appropriate.\n\nOnce the `content-type-changed` custom event it changes value of current\ncontent type on this element unless the event has been canceled.\n\n### Styling\n\nThe element support styles for `anypoint-dropdown-menu`, `anypoint-listbox` and `anypoint-item`",
+      "attributes": [
+        {
+          "name": "contentType",
+          "description": "A value of a Content-Type header.",
+          "type": "string"
+        },
+        {
+          "name": "selected",
+          "description": "Index of currently selected item.",
+          "type": "number"
+        },
+        {
+          "name": "noLabelFloat",
+          "description": "Passes the value to the dropdown element",
+          "type": "boolean"
+        },
+        {
+          "name": "compatibility",
+          "description": "Enables compatibility with Anypoint styling",
+          "type": "boolean"
+        },
+        {
+          "name": "outlined",
+          "description": "Enables Material Design outlined style",
+          "type": "boolean"
+        },
+        {
+          "name": "readOnly",
+          "description": "When set the editor is in read only mode.",
+          "type": "boolean"
+        },
+        {
+          "name": "disabled",
+          "description": "When set all controls are disabled in the form",
+          "type": "boolean"
+        }
+      ],
+      "properties": [
+        {
+          "name": "styles",
+          "type": "CSSResult"
+        },
+        {
+          "name": "contentType",
+          "attribute": "contentType",
+          "description": "A value of a Content-Type header.",
+          "type": "string"
+        },
+        {
+          "name": "selected",
+          "attribute": "selected",
+          "description": "Index of currently selected item.",
+          "type": "number"
+        },
+        {
+          "name": "noLabelFloat",
+          "attribute": "noLabelFloat",
+          "description": "Passes the value to the dropdown element",
+          "type": "boolean"
+        },
+        {
+          "name": "compatibility",
+          "attribute": "compatibility",
+          "description": "Enables compatibility with Anypoint styling",
+          "type": "boolean"
+        },
+        {
+          "name": "outlined",
+          "attribute": "outlined",
+          "description": "Enables Material Design outlined style",
+          "type": "boolean"
+        },
+        {
+          "name": "readOnly",
+          "attribute": "readOnly",
+          "description": "When set the editor is in read only mode.",
+          "type": "boolean"
+        },
+        {
+          "name": "disabled",
+          "attribute": "disabled",
+          "description": "When set all controls are disabled in the form",
+          "type": "boolean"
+        },
+        {
+          "name": "oncontenttypechanged",
+          "type": "EventListener"
+        },
+        {
+          "name": "eventsTarget",
+          "description": "By default the element listens on the `window` object. If this value is set,\nthen all events listeners will be attached to this object instead of `window`.",
+          "type": "EventTarget"
+        }
+      ],
+      "events": [
+        {
+          "name": "content-type-changed"
+        },
+        {
+          "name": "contenttype-changed"
+        }
+      ]
+    }
+  ]
+}
