@@ -1,5 +1,5 @@
 import '@advanced-rest-client/arc-demo-helper/arc-demo-helper.js';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import '@anypoint-web-components/anypoint-switch/anypoint-switch.js';
 import '../content-type-selector.js';
 
 document.getElementById('theme').addEventListener('change', (e) => {
